@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>learning Web Socket</title>
+    </head>
+    <body>
+        <h1>WebSocket Chat App</h1><br /><br /><br />
+    
+        <form id="input-form">
+            <input class="form-control" type="text" id="message" placeholder="Enter message here" name="message"><br /><br />
+            <input class="btn btn-primary" type="submit" value="Send"><br /><br />
+        </form>
+        
+        <div id="messages"></div>
+
+        <script>
+
+            const socket = new WebSocket('ws://localhost:8080');
+
+            socket.onopen = ()=>{
+                console.log('Client Connected')
+            }
+            socket.onmessage = (event)=>{
+                console.log('Message Received: ', event.data);
+                const messages = document.getElementById('messages');
+                messages.innerHTML += `<p>${event.data}</p>`;
+            }
+            socket.onclose = ()=>{
+                console.log('Client Disconnected')
+            }
+            document.getElementById('input-form').addEventListener('submit', (event)=>{
+                const message = document.getElementById('message').value;
+                socket.send(message);
+                document.getElementById('message').value = '';
+                event.preventDefault();
+            })
+
+        </script>
+
+    </body>
+</html>

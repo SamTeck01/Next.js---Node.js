@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Chat System</h1>
+    <form id="input-form" style="margin-bottom: 10px;">
+        <input type="text" name="" id="message"/>
+        <input type="button" value="Send"/>
+    </form>
+
+    <div id="messages"></div>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:8080');
+        socket.onopen=()=> console.log('Connected Successfully');
+
+        socket.onmessage =(event)=>{
+            const messages = document.getElementById('messages');
+            messages.innerHTML += event.data;
+        };
+        socket.onclose=()=> console.log('Connection Closed');
+
+        socket.onerror=(err)=>console.log('Error: ', err);
+
+        document.getElementById('input-form').addEventListener('submit', (event)=>{
+            const message = document.getElementById('message').value;
+            socket.send(message);
+            message = '';
+            event.preventDefault();
+        })
+    </script>
+</body>
+</html>
