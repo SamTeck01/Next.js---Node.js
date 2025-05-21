@@ -3,12 +3,22 @@ const WebSocket = require('ws');
 const http = require('http');
 const app = express();
 const cors = require('cors');
+const fs = require('fs');
 const PORT = 8080;
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
 app.use(cors());
 app.use(express.json());
+
+const readMessage = () => {
+  try {
+    
+  } catch (error) {
+    
+  }
+}
+
 
 let products = {
     people: ['Proff', 'Awaal', 'Samad']

@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "text": "Hello, world!",
+    "sender": "User1",
+    "timestamp": "2023-10-01T12:00:00Z"
+  },
+  {
+    "id": 1743798860549,
+    "text": "hello sansa",
+    "sender": "Client",
+    "timestamp": "2025-04-04T20:34:20.549Z"
+  },
+  {
+    "id": 1743880890799,
+    "text": "awaal is a sansa",
+    "sender": "Client",
+    "timestamp": "2025-04-05T19:21:30.799Z"
+  },
+  {
+    "id": 1743881752845,
+    "text": "proff is abd mujeeb",
+    "sender": "Client",
+    "timestamp": "2025-04-05T19:35:52.845Z"
+  },
+  {
+    "id": 1743980409511,
+    "text": "hello world",
+    "sender": "Client",
+    "timestamp": "2025-04-06T23:00:09.511Z"
+  },
+  {
+    "id": 1743981007817,
+    "text": "j",
+    "sender": "Client",
+    "timestamp": "2025-04-06T23:10:07.817Z"
+  },
+  {
+    "id": 1747692952804,
+    "text": "hh",
+    "sender": "Client",
+    "timestamp": "2025-05-19T22:15:52.805Z"
+  },
+  {
+    "id": 1747753676456,
+    "text": "",
+    "sender": "Client",
+    "timestamp": "2025-05-20T15:07:56.457Z"
+  },
+  {
+    "id": 1747756714552,
+    "text": "i beg you pls start working well",
+    "sender": "Client",
+    "timestamp": "2025-05-20T15:58:34.552Z"
+  },
+  {
+    "id": 1747761249534,
+    "text": "hello",
+    "sender": "Client",
+    "timestamp": "2025-05-20T17:14:09.535Z"
+  },
+  {
+    "id": 1747761278640,
+    "text": "hehhe",
+    "sender": "Client",
+    "timestamp": "2025-05-20T17:14:38.640Z"
+  },
+  {
+    "id": 1747779951331,
+    "text": "in life try and hav money",
+    "sender": "Client",
+    "timestamp": "2025-05-20T22:25:51.331Z"
+  },
+  {
+    "id": 1747780034350,
+    "text": "in life try and have money",
+    "sender": "Client",
+    "timestamp": "2025-05-20T22:27:14.350Z"
+  },
+  {
+    "id": 1747780500269,
+    "text": "lifee",
+    "sender": "Client",
+    "timestamp": "2025-05-20T22:35:00.269Z"
+  },
+  {
+    "id": 1747784799412,
+    "text": "jj",
+    "sender": "Client",
+    "timestamp": "2025-05-20T23:46:39.412Z"
+  },
+  {
+    "id": 1747784986779,
+    "text": "kk",
+    "sender": "Client",
+    "timestamp": "2025-05-20T23:49:46.779Z"
+  }
+]
