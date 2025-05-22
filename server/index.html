@@ -1,43 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>learning Web Socket</title>
-    </head>
-    <body>
-        <h1>WebSocket Chat App</h1><br /><br /><br />
-    
-        <form id="input-form">
-            <input class="form-control" type="text" id="message" placeholder="Enter message here" name="message"><br /><br />
-            <input class="btn btn-primary" type="submit" value="Send"><br /><br />
-        </form>
-        
-        <div id="messages"></div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Auth Page</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: 20px auto; }
+    form { margin-bottom: 20px; }
+    input, button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
+    p { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h2>📝 Sign Up</h2>
+  <form id="signup-form">
+    <input type="text" id="signup-username" placeholder="Username" required />
+    <input type="password" id="signup-password" placeholder="Password" required />
+    <button type="submit">Sign Up</button>
+  </form>
+  <p id="signup-message"></p>
 
-        <script>
+  <hr />
 
-            const socket = new WebSocket('ws://localhost:8080');
+  <h2>🔐 Sign In</h2>
+  <form id="signin-form">
+    <input type="text" id="signin-username" placeholder="Username" required />
+    <input type="password" id="signin-password" placeholder="Password" required />
+    <button type="submit">Sign In</button>
+  </form>
+  <p id="signin-message"></p>
 
-            socket.onopen = ()=>{
-                console.log('Client Connected')
-            }
-            socket.onmessage = (event)=>{
-                console.log('Message Received: ', event.data);
-                const messages = document.getElementById('messages');
-                messages.innerHTML += `<p>${event.data}</p>`;
-            }
-            socket.onclose = ()=>{
-                console.log('Client Disconnected')
-            }
-            document.getElementById('input-form').addEventListener('submit', (event)=>{
-                const message = document.getElementById('message').value;
-                socket.send(message);
-                document.getElementById('message').value = '';
-                event.preventDefault();
-            })
+  <script>
+    // Sign Up
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('signup-username').value;
+      const password = document.getElementById('signup-password').value;
 
-        </script>
+      const res = await fetch('http://localhost:8080/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
 
-    </body>
+      const data = await res.json();
+      const messageEl = document.getElementById('signup-message');
+      messageEl.textContent = data.message || data.error;
+      messageEl.className = data.error ? 'error' : '';
+
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        window.location.href = 'chat.html';
+      }
+    });
+
+    // Sign In
+    document.getElementById('signin-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('signin-username').value;
+      const password = document.getElementById('signin-password').value;
+
+      const res = await fetch('http://localhost:8080/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+      const messageEl = document.getElementById('signin-message');
+      messageEl.textContent = data.message || data.error;
+      messageEl.className = data.error ? 'error' : '';
+
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        window.location.href = 'chat.html';
+      }
+    });
+  </script>
+</body>
 </html>

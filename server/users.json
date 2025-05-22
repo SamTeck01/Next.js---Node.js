@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "username": "abdul samad",
+    "password": "$2b$10$u2Z2JH24ZMjCNXMea33bFe2kn7O1iZlZVFBMm3MCVCov7hdjhMqhG"
+  },
+  {
+    "id": 2,
+    "username": "awaal",
+    "password": "$2b$10$ve0E.sO2DJBtdQMaHpBJL.v3SgWwIWSpu7mF04NPJLdbljqpLWT/a"
+  },
+  {
+    "id": 3,
+    "username": "omolabi",
+    "password": "$2b$10$W37tsyEPsMh7GeR4D2i9U.Ovv3xAFYbgjkLWKnLbnDIMxaD.H6Ol6"
+  },
+  {
+    "id": 4,
+    "username": "omolabii",
+    "password": "$2b$10$LEAt0uPtP5qV0kBl1EIFTOSEUdKFZyTl8YKomiRKo/nv8sYZep74O"
+  }
+]

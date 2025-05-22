@@ -1,55 +1,77 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 
-const MainContent = ({ ws }) => {
+const MainContent = () => {
   const [messages, setMessages] = useState([]);
   const [messageValue, setMessageValue] = useState('');
+  const [isConnected, setIsConnected] = useState(false);
+  const socket = useRef(null);
+  const reconnectTimeout = useRef(null);
 
-  // Fetch old messages once
-  async function fetchMessage() {
-      try {
-        const response = await fetch('http://localhost:8080/messages');
-        const data = await response.json();
-        setMessages(data);
-      } catch (error) {
-        console.log('An error occurred', error);
-      }
+  const fetchAll = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/messages');
+      const data = await res.json();
+      setMessages(data);
+    } catch (error) {
+      console.error('Fetching Failed, Reason:', error);
     }
-  useEffect(() => {
-    fetchMessage();
-  }, []);
+  };
 
-  useEffect(() => {
-    if (!ws.current) return;
+  const connectWebSocket = () => {
+    if (socket.current) socket.current.close();
 
-    ws.current.onopen = () => console.log('✅ WebSocket connected');
+    socket.current = new WebSocket('ws://localhost:8080');
 
-    ws.current.onmessage = (event) => {
-      const newMessage = event.data;
-      setMessages((prev) => [...prev, { sender: 'Server', text: newMessage }]);
+    socket.current.onopen = () => {
+      console.log('✅ WebSocket connected');
+      setIsConnected(true);
+      fetchAll();
     };
 
-    ws.current.onerror = (err) => console.error('❌ WebSocket Error:', err);
+    socket.current.onmessage = (event) => {
+      setMessages((prev) => [...prev, { sender: 'Server', text: event.data }]);
+    };
+
+    socket.current.onclose = () => {
+      console.warn('❌ WebSocket closed. Reconnecting...');
+      setIsConnected(null);
+      reconnectTimeout.current = setTimeout(connectWebSocket, 500); // try reconnect
+      setIsConnected(true)
+    };
+
+    socket.current.onerror = (err) => {
+      console.error('⚠️ WebSocket error:', err);
+      socket.current.close(); // triggers onclose
+    };
+  };
+
+  useEffect(() => {
+    connectWebSocket();
+    fetchAll();
 
     return () => {
-      ws.current.close();
+      socket.current?.close();
+      clearTimeout(reconnectTimeout.current);
     };
-  }, [ws]);
+  }, []);
 
   const submitMessage = (e) => {
     e.preventDefault();
-    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-      ws.current.send(messageValue);
+
+    if (socket.current?.readyState === WebSocket.OPEN && messageValue.trim()) {
+      socket.current.send(messageValue);
+      setMessages((prev) => [...prev, { sender: 'You', text: messageValue }]);
       setMessageValue('');
     } else {
-      console.error('WebSocket is not connected');
+      console.warn('WebSocket not ready or empty message.');
     }
-    fetchMessage();
   };
 
   return (
     <div>
       <h1>💬 Chat System</h1>
+      <p>Status: {isConnected ? '🟢 Connected' : '⚪ Reconnecting '}</p>
       <form onSubmit={submitMessage}>
         <input
           type="text"
@@ -74,106 +96,4 @@ const MainContent = ({ ws }) => {
   );
 };
 
-const Home = () => {
-  const socketRef = useRef(null);
-
-  useEffect(() => {
-    socketRef.current = new WebSocket('ws://localhost:8080');
-  }, []);
-
-  return <MainContent ws={socketRef} />;
-};
-
-export default Home;
-
-
-
-{/*'use client'
-import React, { useState, useEffect } from 'react';
-
-const MainContent = ({ws}) => {
-  const [messages, setMessages] = useState([]);
-  const [messageValue, setMessageValue] = useState('');
-
-  
-  useEffect(()=> {
-    async function fetchMessage () {
-      try {
-        const response = await fetch('http://localhost:8080/messages');
-        const data = await response.json();
-        setMessages(data);
-      } catch (error) {
-        console.log('An error occurred', error);
-      }
-    };fetchMessage(); 
-    
-  }, []);
-  
-  useEffect(() => {
-    if (ws) {
-      ws.onopen = () => console.log('Connected Successfully');
-      ws.onmessage = (event) => {
-        const newMessage = event.data;
-        console.log(newMessage);
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: 'Server', text: newMessage },
-        ]);
-      };
-      ws.onerror = (err) => console.error('WebSocket Error:', err);
-    }
-
-    return () => {
-      if (ws) {
-        ws.close();
-      }
-    };
-  }, [ws]);
-
-  const submitMessage = (event) => {
-    event.preventDefault();
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      console.log(ws.readyState);
-      console.log(messageValue)
-      ws.send(messageValue);
-      setMessageValue('');
-    } else {
-      console.error('WebSocket is not connected');
-    }
-  };
-
-  return (
-    <div>
-      <h1>Chat System</h1>
-      <form onSubmit={submitMessage} style={{ marginBottom: '10px' }}>
-        <input
-          type="text"
-          value={messageValue}
-          onChange={(e)=> setMessageValue(e.target.value)}
-        />
-        <input type="submit" value="Send" />
-      </form>
-
-      <div>
-        {messages.length === 0 && <p>Messages is empty</p>}
-        {messages ? messages.map((message, index) => (
-          <p key={index}>
-            
-            <strong>{message.sender}: </strong>
-            {message.text}
-          </p>
-        )) :  <p>Messages Loading</p> }
-      </div>
-    </div>
-  );
-}
-
-
-const Home=()=> { 
-  const ws = new WebSocket('ws://localhost:8080');
-  ws === new WebSocket('ws://localhost:8080') && console.log('successfully connected');
-  return (<>
-      <MainContent ws={ws}/>
-  </>)
-}
-export default Home;*/}
+export default MainContent;
